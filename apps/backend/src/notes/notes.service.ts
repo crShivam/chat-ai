@@ -15,7 +15,6 @@ export class NotesService {
         title: createNoteDto.title,
         content: createNoteDto.content,
         tags: createNoteDto.tags || [],
-        embedding: [], // Empty by default, would be filled by a vector embedding service
       },
     });
   }
