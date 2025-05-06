@@ -10,14 +10,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Briefcase, TicketCheck } from 'lucide-react';
-import { Tooltip, TooltipTrigger, TooltipContent } from '../ui/tooltip';
 
 export function Navbar() {
   const { user, signOut } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const navigate = useNavigate();
 
   // Add subtle fade-in animation when component mounts
   useEffect(() => {
