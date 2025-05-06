@@ -1,27 +1,27 @@
 import { useState } from 'react';
-import { useInfiniteNotes, Note, useDeleteNote } from '../../lib/hooks/useNotes';
+import { useNotes, Note, useDeleteNote } from '../../lib/hooks/useNotes';
 import NoteView from './NoteView';
 import { SearchBar } from './SearchBar';
 import { TagFilter } from './TagFilter';
 import { ActiveFilters } from './ActiveFilters';
-import { NotesGrid } from './NotesGrid';
+import { NotesGridWithPagination } from './NotesGridWithPagination';
 
 export default function NotesList() {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchValue, setSearchValue] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 2;  // Same as in backend service
   
   const {
     data,
     isLoading,
     isError,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage
-  } = useInfiniteNotes({ 
-    limit: 10,
+    error
+  } = useNotes({ 
+    page: currentPage,
+    limit,
     search: searchTerm,
     tags: selectedTags.length > 0 ? selectedTags : undefined
   });
@@ -31,6 +31,7 @@ export default function NotesList() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     setSearchTerm(searchValue);
+    setCurrentPage(1); // Reset to first page on new search
   };
   
   const handleTagToggle = (tag: string) => {
@@ -39,9 +40,13 @@ export default function NotesList() {
         ? prev.filter(t => t !== tag)
         : [...prev, tag]
     );
+    setCurrentPage(1); // Reset to first page when filters change
   };
   
-  const clearAllTags = () => setSelectedTags([]);
+  const clearAllTags = () => {
+    setSelectedTags([]);
+    setCurrentPage(1); // Reset to first page when filters change
+  };
   
   const handleDelete = async (id: string) => {
     try {
@@ -54,7 +59,12 @@ export default function NotesList() {
     }
   };
   
-  const notes = data?.pages.flatMap(page => page.data) || [];
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const notes = data?.data || [];
+  const totalPages = data?.meta.totalPages || 1;
   const allTags = Array.from(new Set(notes.flatMap(note => note.tags)));
 
   if (isError) return <div className="text-destructive">Error: {error.message}</div>;
@@ -92,15 +102,15 @@ export default function NotesList() {
         clearAllTags={clearAllTags}
       />
       
-      <NotesGrid 
+      <NotesGridWithPagination 
         notes={notes}
         isLoading={isLoading}
         handleDelete={handleDelete}
         isDeleting={deleteNote.isPending}
         setSelectedNote={setSelectedNote}
-        hasNextPage={hasNextPage || false}
-        fetchNextPage={fetchNextPage}
-        isFetchingNextPage={isFetchingNextPage}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
       />
     </div>
   );

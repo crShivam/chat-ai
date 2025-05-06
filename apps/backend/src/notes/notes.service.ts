@@ -20,7 +20,7 @@ export class NotesService {
   }
 
   async findAll(userId: string, query: FindNotesDto) {
-    const { page = 1, limit = 10, search, tags } = query;
+    const { page = 1, limit = 2, search, tags } = query;
     const skip = (page - 1) * limit;
 
     // Build the where conditions based on search parameters
@@ -46,7 +46,7 @@ export class NotesService {
     const notes = await this.prisma.note.findMany({
       where,
       skip,
-      take: 10,
+      take: 2,
       orderBy: { createdAt: 'desc' },
     });
 
