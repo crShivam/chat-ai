@@ -43,6 +43,11 @@ export function Navbar() {
         </Link>
 
         <div className="flex items-center space-x-4">
+
+          <Link to="/new" className="transition-colors duration-200 hover:bg-muted">
+            <Button size="sm">New Note</Button>
+          </Link>
+
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

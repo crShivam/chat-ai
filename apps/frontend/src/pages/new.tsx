@@ -29,7 +29,13 @@ export default function NewNote() {
       className="min-h-screen flex flex-col"
     >
       <Navbar />
-      <main className="flex flex-col w-full max-w-5xl mx-auto h-[calc(100vh-56px)] items-center py-12">
+      <main className="flex flex-col w-full max-w-5xl mx-auto px-4 lg:px-0 items-center py-12 transition-all duration-500 ease-in-out"
+        style={{
+          opacity: isVisible ? 1 : 0,
+          transform: isVisible ? "translateY(0)" : "translateY(20px)",
+          transitionDelay: "200ms",
+        }}
+      >
        <Card className="w-full">
         <CardHeader>
           <CardTitle className="text-2xl font-bold">New Note</CardTitle>

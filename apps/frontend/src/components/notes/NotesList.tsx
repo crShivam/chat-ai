@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useInfiniteNotes, Note, useDeleteNote } from '../../lib/hooks/useNotes';
+import Loader from '../common/loader';
+
 
 export default function NotesList() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -51,7 +53,13 @@ export default function NotesList() {
     new Set(notes.flatMap(note => note.tags))
   );
 
-  if (isLoading) return <div className="loading">Loading notes...</div>;
+  if (isLoading) {
+    return (
+      <main className="container mx-auto p-4 flex justify-center items-center min-h-screen">
+        <Loader size="lg" />
+      </main>
+    );
+  }
   
   if (isError) return <div className="error">Error: {error.message}</div>;
 
