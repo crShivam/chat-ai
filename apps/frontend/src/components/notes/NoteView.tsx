@@ -49,6 +49,13 @@ export default function NoteView({ note, onBack }: NoteViewProps) {
             </div>
           )}
           
+          {note.summary && (
+            <div className="mt-2 mb-4 p-3 bg-muted rounded-md">
+              <h3 className="text-sm font-medium mb-1">AI Summary</h3>
+              <p className="text-sm text-muted-foreground">{note.summary}</p>
+            </div>
+          )}
+          
           <div className="prose dark:prose-invert max-w-none">
             <MarkdownPreview 
               source={note.content} 

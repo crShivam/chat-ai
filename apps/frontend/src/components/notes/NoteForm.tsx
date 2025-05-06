@@ -84,7 +84,7 @@ export default function NoteForm({ note }: NoteFormProps) {
   };
 
   return (
-    <div className="w-full mx-auto px-4 sm:px-6 max-w-3xl">
+    <div className="w-full mx-auto px-4 sm:px-6">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}

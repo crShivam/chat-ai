@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Trash2 } from "lucide-react";
+import { Trash2, Sparkles } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -48,12 +48,18 @@ export default function NoteCard({
           <h2 className="text-xl font-bold line-clamp-2">{note.title}</h2>
         </CardHeader>
         <CardContent>
-          <p className="text-muted-foreground mb-4 line-clamp-4">
-            {note.content.length > 1000
-              ? note.content.substring(0, 1000) + "..."
-              : note.content}
-          </p>
-
+          {note.summary ? (
+            <div className="my-3 rounded-md ">
+              <div className="flex items-center gap-1 text-xs font-medium text-muted-foreground mb-1">
+                <Sparkles className="h-3 w-3" />
+                <span>AI Summary</span>
+              </div>
+              <p className="text-sm">{note.summary}</p>
+            </div>
+          ) : (
+            <p className="text-sm">{note.content.substring(0, 100)}</p>
+          )}
+      
           {note.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-auto">
               {note.tags.map((tag) => (
