@@ -13,7 +13,7 @@ export class PaginatedNotes {
     example: {
       total: 50,
       page: 1,
-      limit: 2,
+      limit: 5,
       totalPages: 5
     }
   })
