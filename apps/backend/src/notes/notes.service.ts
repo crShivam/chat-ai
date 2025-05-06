@@ -3,18 +3,30 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
 import { FindNotesDto } from './dto/find-notes.dto';
+import { GeminiService } from '../gemini/gemini.service';
 
 @Injectable()
 export class NotesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private geminiService: GeminiService
+  ) {}
 
   async create(userId: string, createNoteDto: CreateNoteDto) {
+    // Only generate summary if content is long enough (more than 200 characters)
+    let summary = '';
+    if (createNoteDto.content.length > 200) {
+      summary = await this.geminiService.generateSummary(createNoteDto.content);
+    }
+
+    // Create the note with the generated summary (if any)
     return this.prisma.note.create({
       data: {
         userId,
         title: createNoteDto.title,
         content: createNoteDto.content,
         tags: createNoteDto.tags || [],
+        summary, // Add the generated summary (empty if content was short)
       },
     });
   }

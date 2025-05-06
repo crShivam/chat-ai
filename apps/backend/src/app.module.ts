@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { NotesModule } from './notes/notes.module';
+import { GeminiModule } from './gemini/gemini.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { NotesModule } from './notes/notes.module';
     PrismaModule,
     AuthModule,
     NotesModule,
+    GeminiModule,
   ],
   controllers: [AppController],
   providers: [AppService],
