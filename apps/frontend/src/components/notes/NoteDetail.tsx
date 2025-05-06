@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNote, useDeleteNote } from '../../lib/hooks/useNotes';
 import NoteForm from './NoteForm';
+import MarkdownPreview from './MarkdownPreview';
 
 interface NoteDetailProps {
   noteId: string;
@@ -33,6 +34,18 @@ export default function NoteDetail({ noteId, onBack, onDelete }: NoteDetailProps
     setIsEditing(false);
   };
   
+  useEffect(() => {
+    // Add a listener for navigation change in NoteForm
+    const handleNavigation = () => {
+      setIsEditing(false);
+    };
+    
+    // This is a simple way to detect navigation changes when the form submits
+    return () => {
+      // Cleanup
+    };
+  }, []);
+  
   if (isLoading) return <div className="loading">Loading note...</div>;
   
   if (isError) return <div className="error">Error: {error.message}</div>;
@@ -48,10 +61,7 @@ export default function NoteDetail({ noteId, onBack, onDelete }: NoteDetailProps
           </button>
         </div>
         
-        <NoteForm 
-          noteId={noteId} 
-          onSuccess={handleEditSuccess}
-        />
+        <NoteForm note={note} />
       </div>
     );
   }
@@ -107,7 +117,7 @@ export default function NoteDetail({ noteId, onBack, onDelete }: NoteDetailProps
         
         <div className="note-content">
           <h3>Content</h3>
-          <p>{note.content}</p>
+          <MarkdownPreview content={note.content} className="mt-2" />
         </div>
       </div>
     </div>

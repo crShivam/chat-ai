@@ -10,12 +10,15 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Note, useCreateNote, useUpdateNote } from "@/lib/hooks/useNotes";
 import TagInput from "./TagInput";
+import SimpleMarkdownEditor from "./SimpleMarkdownEditor";
+import MarkdownPreview from "./MarkdownPreview";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Edit, Eye } from "lucide-react";
 import { toast } from "sonner";
 
 const noteSchema = z.object({
@@ -33,6 +36,7 @@ interface NoteFormProps {
 export default function NoteForm({ note }: NoteFormProps) {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<string>("edit");
 
   const createNote = useCreateNote();
   const updateNote = note ? useUpdateNote(note.id) : null;
@@ -133,12 +137,50 @@ export default function NoteForm({ note }: NoteFormProps) {
               <FormItem>
                 <FormLabel>Content</FormLabel>
                 <FormControl>
-                  <Textarea
-                    placeholder="Write your note here..."
-                    {...field}
-                    disabled={isLoading}
-                    className="min-h-[200px] resize-y"
-                  />
+                  <Tabs 
+                    defaultValue="edit" 
+                    className="w-full"
+                    value={activeTab}
+                    onValueChange={setActiveTab}
+                  >
+                    <TabsList className="w-full grid grid-cols-2 mb-2">
+                      <TabsTrigger value="edit" className="flex items-center gap-1">
+                        <Edit size={16} />
+                        <span>Edit</span>
+                      </TabsTrigger>
+                      <TabsTrigger value="preview" className="flex items-center gap-1">
+                        <Eye size={16} />
+                        <span>Preview</span>
+                      </TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="edit" className="mt-0">
+                      <SimpleMarkdownEditor
+                        value={field.value}
+                        onChange={field.onChange}
+                        disabled={isLoading}
+                        placeholder="Write your note here..."
+                        onPreviewClick={() => setActiveTab("preview")}
+                      />
+                    </TabsContent>
+                    <TabsContent value="preview" className="mt-0">
+                      <div className="min-h-[300px] max-h-[500px] border border-input rounded-md p-4 pt-10 overflow-auto bg-card relative">
+                        {field.value ? (
+                          <MarkdownPreview content={field.value} />
+                        ) : (
+                          <p className="text-muted-foreground italic">Nothing to preview yet...</p>
+                        )}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="absolute top-2 right-2 flex items-center gap-1"
+                          onClick={() => setActiveTab("edit")}
+                        >
+                          <Edit size={16} />
+                          <span>Edit</span>
+                        </Button>
+                      </div>
+                    </TabsContent>
+                  </Tabs>
                 </FormControl>
                 <FormMessage />
               </FormItem>

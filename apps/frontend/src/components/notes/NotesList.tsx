@@ -12,7 +12,7 @@ export default function NotesList() {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const limit = 2;  // Same as in backend service
+  const limit = 5;
   
   const {
     data,
