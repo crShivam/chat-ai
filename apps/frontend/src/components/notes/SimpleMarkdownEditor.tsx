@@ -12,7 +12,6 @@ import {
   Link, 
   ImageIcon,
   Quote,
-  Eye
 } from 'lucide-react';
 
 interface SimpleMarkdownEditorProps {
@@ -94,21 +93,6 @@ export default function SimpleMarkdownEditor({
             </Button>
           ))}
         </div>
-        
-        {onPreviewClick && (
-          <Button
-            variant="ghost"
-            size="sm"
-            type="button"
-            onClick={onPreviewClick}
-            disabled={disabled}
-            title="Preview"
-            className="h-8 px-2 rounded-md flex gap-1 items-center"
-          >
-            <Eye size={16} />
-            <span className="text-xs">Preview</span>
-          </Button>
-        )}
       </div>
       <Textarea
         ref={textareaRef}

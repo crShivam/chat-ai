@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNote, useDeleteNote } from '../../lib/hooks/useNotes';
 import NoteForm from './NoteForm';
-import MarkdownPreview from './MarkdownPreview';
+import MarkdownPreview from '@uiw/react-markdown-preview';
 
 interface NoteDetailProps {
   noteId: string;
@@ -117,7 +117,8 @@ export default function NoteDetail({ noteId, onBack, onDelete }: NoteDetailProps
         
         <div className="note-content">
           <h3>Content</h3>
-          <MarkdownPreview content={note.content} className="mt-2" />
+          <MarkdownPreview source={note.content}  className="bg-transparent text-sm sm:text-base" 
+                            style={{ backgroundColor: 'transparent', color: 'inherit' }}  />
         </div>
       </div>
     </div>
