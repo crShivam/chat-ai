@@ -46,7 +46,7 @@ export class NotesService {
     const notes = await this.prisma.note.findMany({
       where,
       skip,
-      take: limit,
+      take: 10,
       orderBy: { createdAt: 'desc' },
     });
 
