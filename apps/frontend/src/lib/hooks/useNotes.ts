@@ -62,7 +62,7 @@ export const useNotes = (params: NotesQueryParams = {}) => {
       if (params.limit) queryParams.append('limit', params.limit.toString());
       if (params.search) queryParams.append('search', params.search);
       if (params.tags && params.tags.length > 0) {
-        params.tags.forEach(tag => queryParams.append('tags', tag));
+        queryParams.append('tags', JSON.stringify(params.tags));
       }
       
       const endpoint = `/notes?${queryParams.toString()}`;
@@ -84,7 +84,7 @@ export const useInfiniteNotes = (params: Omit<NotesQueryParams, 'page'> = {}) =>
       if (params.limit) queryParams.append('limit', params.limit.toString());
       if (params.search) queryParams.append('search', params.search);
       if (params.tags && params.tags.length > 0) {
-        params.tags.forEach(tag => queryParams.append('tags', tag));
+        queryParams.append('tags', JSON.stringify(params.tags));
       }
       
       const endpoint = `/notes?${queryParams.toString()}`;

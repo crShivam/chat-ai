@@ -1,6 +1,7 @@
 import { Type } from 'class-transformer';
 import { IsArray, IsInt, IsOptional, IsString, Min } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 
 export class FindNotesDto {
   @ApiProperty({
@@ -45,5 +46,15 @@ export class FindNotesDto {
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
+  @Transform(({ value }) => {
+    if (typeof value === 'string') {
+      try {
+        return JSON.parse(value);
+      } catch (e) {
+        return value ? [value] : [];
+      }
+    }
+    return value;
+  })
   tags?: string[];
 } 
