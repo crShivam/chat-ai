@@ -2,21 +2,17 @@ import { useAuth } from "@/contexts/auth-context";
 import Loader from "@/components/common/loader";
 import { Navbar } from "@/components/common/Navbar";
 import { useEffect, useState } from "react";
-import NotesList from "@/components/notes/NotesList";
-import NotesEditor from "@/components/notes/NotesEditor";
 import NoteForm from "@/components/notes/NoteForm";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export default function Dashboard() {
+export default function NewNote() {
   const { isLoading } = useAuth();
   const [isVisible, setIsVisible] = useState(false);
 
-  // Add subtle animation when component mounts
   useEffect(() => {
-    // Small delay to ensure CSS transitions work properly
     const timer = setTimeout(() => {
       setIsVisible(true);
     }, 100);
-
     return () => clearTimeout(timer);
   }, []);
 
@@ -30,19 +26,18 @@ export default function Dashboard() {
 
   return (
     <div
-      className="min-h-screen flex flex-col transition-opacity duration-500 ease-in-out"
-      style={{ opacity: isVisible ? 1 : 0 }}
+      className="min-h-screen flex flex-col"
     >
       <Navbar />
-      <main
-        className="flex flex-col w-full max-w-5xl mx-auto transition-all duration-500 ease-in-out"
-        style={{
-          opacity: isVisible ? 1 : 0,
-          transform: isVisible ? "translateY(0)" : "translateY(20px)",
-          transitionDelay: "200ms",
-        }}
-      >
-        <NotesList />
+      <main className="flex flex-col w-full max-w-5xl mx-auto h-[calc(100vh-56px)] items-center py-12">
+       <Card className="w-full">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">New Note</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <NoteForm />
+        </CardContent>
+       </Card>
       </main>
     </div>
   );
