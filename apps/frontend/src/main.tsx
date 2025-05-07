@@ -9,6 +9,8 @@ import { Toaster } from "sonner";
 import ProtectedRoute from "./components/auth/protected-route";
 import { AuthProvider } from "./contexts/auth-context";
 import NewNote from "./pages/new";
+import EditNote from "./pages/edit";
+
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
@@ -28,6 +30,11 @@ createRoot(document.getElementById("root")!).render(
             <Route path="/new" element={
               <ProtectedRoute>
                 <NewNote />
+              </ProtectedRoute>
+            } />
+            <Route path="/notes/:id/edit" element={
+              <ProtectedRoute>
+                <EditNote />
               </ProtectedRoute>
             } />
             <Route path="/auth" element={<Auth />} />
