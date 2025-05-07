@@ -1,0 +1,36 @@
+FROM node:20-alpine AS base
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apk add --no-cache git
+
+# Set pnpm store directory
+ENV PNPM_HOME=/app/.pnpm-store
+RUN mkdir -p $PNPM_HOME
+
+# Copy workspace configuration
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/backend/package.json ./apps/backend/package.json
+COPY apps/frontend/package.json ./apps/frontend/package.json
+COPY packages/eslint-config/package.json ./packages/eslint-config/package.json
+COPY packages/tsconfig/package.json ./packages/tsconfig/package.json
+
+# Backend development environment
+FROM base as backend-dev
+RUN pnpm install --frozen-lockfile
+COPY apps/backend/prisma ./apps/backend/prisma
+RUN cd apps/backend && npx prisma generate
+WORKDIR /app
+
+# Frontend development environment
+FROM base as frontend-dev
+RUN pnpm install --frozen-lockfile
+WORKDIR /app
+
+# Expose development ports
+EXPOSE 3000 5173

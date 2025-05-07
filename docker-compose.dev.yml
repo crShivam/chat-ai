@@ -1,0 +1,66 @@
+version: '3.9'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: thena
+      POSTGRES_PASSWORD: thenapassword
+      POSTGRES_DB: thena
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U thena"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend service - development mode
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      target: backend-dev
+    volumes:
+      - ./apps/backend:/app/apps/backend
+      - ./packages:/app/packages
+      - backend_node_modules:/app/apps/backend/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://thena:thenapassword@postgres:5432/thena
+      - NODE_ENV=development
+      - PORT=3000
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    command: pnpm dev
+
+  # Frontend service - development mode
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      target: frontend-dev
+    volumes:
+      - ./apps/frontend:/app/apps/frontend
+      - ./packages:/app/packages
+      - frontend_node_modules:/app/apps/frontend/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:3000
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    command: pnpm dev
+
+volumes:
+  postgres_data:
+  backend_node_modules:
+  frontend_node_modules:
