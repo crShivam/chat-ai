@@ -68,4 +68,53 @@ export class GeminiService {
       return '';
     }
   }
+
+  /**
+   * Generates two relevant tags for the given content using Gemini AI.
+   * Note: This service works best with longer content.
+   * 
+   * @param content - The content to generate tags for
+   * @returns An array of two generated tags, or empty array if generation fails
+   */
+  async generateTags(content: string): Promise<string[]> {
+    if (!this.genAI) {
+      this.logger.warn(
+        'Skipping tag generation: GeminiService is not initialized due to missing API key.',
+      );
+      return [];
+    }
+
+    try {
+      const modelParams: ModelParams = { model: this.modelName };
+      const model = this.genAI.getGenerativeModel(modelParams);
+
+      const prompt = `Given the following content, generate exactly two relevant tags that best categorize or describe it. Return only the tags as a comma-separated list, no additional text:\n\n${content}`;
+
+      const result: GenerateContentResult = await model.generateContent(prompt);
+      const response = result.response;
+      const tagsText = response.text().trim();
+      
+      // Split by comma and clean up the tags
+      const tags = tagsText.split(',').map(tag => tag.trim());
+      
+      // Ensure we return exactly two tags
+      return tags.slice(0, 2);
+    } catch (error: unknown) {
+      let errorMessage = 'Unknown error';
+      let stack;
+
+      if (error instanceof Error) {
+        errorMessage = error.message;
+        stack = error.stack;
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      }
+
+      this.logger.error(
+        `Error generating tags with Gemini: ${errorMessage}`,
+        stack,
+      );
+      return [];
+    }
+  }
 }

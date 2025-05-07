@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { NotesModule } from './notes/notes.module';
 import { GeminiModule } from './gemini/gemini.module';
+import { TagsModule } from './tags/tags.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { GeminiModule } from './gemini/gemini.module';
     AuthModule,
     NotesModule,
     GeminiModule,
+    TagsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
