@@ -1,4 +1,4 @@
-import { LoginForm } from '../components/auth/login-form';
+import LoginForm from '@/components/auth/login-form';
 import { useEffect, useState } from 'react';
 
 export default function Auth() {

@@ -13,7 +13,7 @@ export default function EditNoteForm() {
   
   if (isLoading) {
     return (
-      <div className="max-w-4xl mx-auto w-full px-4 py-6">
+      <div className="mx-auto w-full py-6">
         <div className="mb-6">
           <Button
             variant="outline"
@@ -27,7 +27,7 @@ export default function EditNoteForm() {
         </div>
         
         <div className="space-y-4">
-          <Skeleton className="h-10 w-full max-w-md" />
+          <Skeleton className="h-10 w-full max-w-5xl" />
           <Skeleton className="h-10 w-full" />
           <Skeleton className="h-[300px] w-full" />
         </div>
@@ -37,7 +37,7 @@ export default function EditNoteForm() {
   
   if (isError || !note) {
     return (
-      <div className="max-w-4xl mx-auto w-full px-4 py-6 text-center">
+      <div className="max-w-5xl mx-auto w-full px-4 py-6 text-center">
         <h2 className="text-xl font-bold mb-4">Error Loading Note</h2>
         <p className="text-muted-foreground mb-6">
           We couldn't find the note you're looking for.
@@ -48,7 +48,7 @@ export default function EditNoteForm() {
   }
   
   return (
-    <div className="max-w-4xl mx-auto w-full px-4 py-6">
+    <div className="max-w-5xl mx-auto w-full px-4 py-6">
       <div className="mb-6">
         <Button
           variant="outline"

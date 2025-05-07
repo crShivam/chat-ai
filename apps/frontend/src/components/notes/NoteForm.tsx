@@ -14,11 +14,12 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Note, useCreateNote, useUpdateNote } from "@/lib/hooks/useNotes";
+import { useTags } from "@/lib/hooks/useTags";
 import TagInput from "./TagInput";
 import SimpleMarkdownEditor from "./SimpleMarkdownEditor";
 import MarkdownPreview from "@uiw/react-markdown-preview";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Edit, Eye } from "lucide-react";
+import { Edit, Eye, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
 const noteSchema = z.object({
@@ -37,6 +38,7 @@ export default function NoteForm({ note }: NoteFormProps) {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("edit");
+  const { generateTags } = useTags();
 
   const createNote = useCreateNote();
   const updateNote = note ? useUpdateNote(note.id) : null;
@@ -49,6 +51,29 @@ export default function NoteForm({ note }: NoteFormProps) {
       tags: note?.tags || [],
     },
   });
+
+  const handleGenerateTags = async () => {
+    const content = form.getValues("content");
+    if (content.length < 50) {
+      toast.error("Content too short", {
+        description: "Please write at least 50 characters to generate tags",
+      });
+      return;
+    }
+
+    try {
+      const tags = await generateTags.mutateAsync(content);
+      form.setValue("tags", tags);
+      toast.success("Tags generated", {
+        description: "AI has generated tags for your note",
+      });
+    } catch (error) {
+      toast.error("Failed to generate tags", {
+        description:
+          error instanceof Error ? error.message : "An error occurred",
+      });
+    }
+  };
 
   const onSubmit = async (data: NoteSchema) => {
     setIsLoading(true);
@@ -115,14 +140,26 @@ export default function NoteForm({ note }: NoteFormProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Tags</FormLabel>
-                <FormControl>
-                  <TagInput
-                    placeholder="Add tags... (press Enter to add)"
-                    tags={field.value || []}
-                    onTagsChange={field.onChange}
-                    disabled={isLoading}
-                  />
-                </FormControl>
+                <div className="flex items-center justify-between gap-2">
+                  <FormControl className="flex-1">
+                    <TagInput
+                      placeholder="Add tags... (press Enter to add)"
+                      tags={field.value || []}
+                      onTagsChange={field.onChange}
+                      disabled={isLoading}
+                    />
+                  </FormControl>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={handleGenerateTags}
+                    disabled={isLoading || generateTags.isPending}
+                    className="flex items-center gap-1"
+                  >
+                    <Sparkles className="h-4 w-4" />
+                  </Button>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
@@ -135,18 +172,24 @@ export default function NoteForm({ note }: NoteFormProps) {
               <FormItem>
                 <FormLabel>Content</FormLabel>
                 <FormControl>
-                  <Tabs 
-                    defaultValue="edit" 
+                  <Tabs
+                    defaultValue="edit"
                     className="w-full"
                     value={activeTab}
                     onValueChange={setActiveTab}
                   >
                     <TabsList className="w-full grid grid-cols-2 mb-2">
-                      <TabsTrigger value="edit" className="flex items-center gap-1 text-sm sm:text-base">
+                      <TabsTrigger
+                        value="edit"
+                        className="flex items-center gap-1 text-sm sm:text-base"
+                      >
                         <Edit size={16} />
                         <span>Edit</span>
                       </TabsTrigger>
-                      <TabsTrigger value="preview" className="flex items-center gap-1 text-sm sm:text-base">
+                      <TabsTrigger
+                        value="preview"
+                        className="flex items-center gap-1 text-sm sm:text-base"
+                      >
                         <Eye size={16} />
                         <span>Preview</span>
                       </TabsTrigger>
@@ -163,13 +206,18 @@ export default function NoteForm({ note }: NoteFormProps) {
                     <TabsContent value="preview" className="mt-0">
                       <div className="min-h-[200px] sm:min-h-[300px] max-h-[400px] sm:max-h-[500px] border border-input rounded-md p-3 sm:p-4 pt-8 sm:pt-10 overflow-auto bg-card relative">
                         {field.value ? (
-                          <MarkdownPreview 
-                            source={field.value} 
-                            className="bg-transparent text-sm sm:text-base" 
-                            style={{ backgroundColor: 'transparent', color: 'inherit' }} 
+                          <MarkdownPreview
+                            source={field.value}
+                            className="bg-transparent text-sm sm:text-base"
+                            style={{
+                              backgroundColor: "transparent",
+                              color: "inherit",
+                            }}
                           />
                         ) : (
-                          <p className="text-muted-foreground italic text-sm sm:text-base">Nothing to preview yet...</p>
+                          <p className="text-muted-foreground italic text-sm sm:text-base">
+                            Nothing to preview yet...
+                          </p>
                         )}
                         <Button
                           variant="outline"

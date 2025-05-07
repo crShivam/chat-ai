@@ -10,15 +10,18 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
+import { useTags } from "@/lib/hooks/useTags";
 
 interface TagFilterProps {
-  allTags: string[];
   selectedTags: string[];
   handleTagToggle: (tag: string) => void;
   clearAllTags: () => void;
 }
 
-export function TagFilter({ allTags, selectedTags, handleTagToggle, clearAllTags }: TagFilterProps) {
+export function TagFilter({ selectedTags, handleTagToggle, clearAllTags }: TagFilterProps) {
+  const { getAllTags } = useTags();
+  const allTags = getAllTags.data || [];
+  
   if (allTags.length === 0) return null;
   
   return (
@@ -37,7 +40,7 @@ export function TagFilter({ allTags, selectedTags, handleTagToggle, clearAllTags
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel>Filter by Tags</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {allTags.map(tag => (
+        {allTags.map((tag: string) => (
           <DropdownMenuCheckboxItem
             key={tag}
             checked={selectedTags.includes(tag)}

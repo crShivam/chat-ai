@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import supabase from '@/lib/supabase';
 import { useAuth } from '@/contexts/auth-context';
 
-export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) {
+function LoginForm({ className, ...props }: React.ComponentProps<'div'>) {
   const { isLoading: authLoading } = useAuth();
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -95,3 +95,5 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
     </div>
   );
 }
+
+export default LoginForm;

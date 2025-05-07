@@ -1,10 +1,9 @@
-import { useAuth } from "@/contexts/auth-context";
 import Loader from "@/components/common/loader";
-import { Navbar } from "@/components/common/Navbar";
-import { useEffect, useState } from "react";
+import Navbar from "@/components/common/Navbar";
 import NotesList from "@/components/notes/NotesList";
-import NotesEditor from "@/components/notes/NotesEditor";
-import NoteForm from "@/components/notes/NoteForm";
+
+import { useAuth } from "@/contexts/auth-context";
+import { useEffect, useState } from "react";
 
 export default function Dashboard() {
   const { isLoading } = useAuth();

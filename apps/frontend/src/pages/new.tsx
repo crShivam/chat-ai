@@ -1,9 +1,9 @@
-import { useAuth } from "@/contexts/auth-context";
 import Loader from "@/components/common/loader";
-import { Navbar } from "@/components/common/Navbar";
-import { useEffect, useState } from "react";
+import Navbar from "@/components/common/Navbar";
 import NoteForm from "@/components/notes/NoteForm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/contexts/auth-context";
 
 export default function NewNote() {
   const { isLoading } = useAuth();

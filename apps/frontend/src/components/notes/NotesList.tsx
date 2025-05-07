@@ -73,9 +73,7 @@ export default function NotesList() {
     return (
       <NoteView 
         note={selectedNote}
-        onDelete={handleDelete}
         onBack={() => setSelectedNote(null)}
-        isDeleting={deleteNote.isPending}
       />
     );
   }
@@ -89,7 +87,6 @@ export default function NotesList() {
           handleSearch={handleSearch}
         />
         <TagFilter 
-          allTags={allTags}
           selectedTags={selectedTags}
           handleTagToggle={handleTagToggle}
           clearAllTags={clearAllTags}

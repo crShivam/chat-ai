@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Navigate, useLocation } from 'react-router';
+import { Navigate } from 'react-router';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/auth-context';
 import Loader from '../common/loader';

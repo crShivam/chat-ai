@@ -31,7 +31,7 @@ const TagInput = ({
     };
   
     return (
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 w-full">
         {tags.map(tag => (
           <Badge key={tag} variant="secondary" className="gap-1 px-2 py-1">
             {tag}
