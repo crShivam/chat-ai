@@ -9,7 +9,7 @@ async function bootstrap() {
     cors: {
       origin: [
         'http://localhost:5173',
-        'https://chat-ai-frontend-ecru.vercel.app/',
+        'https://chat-ai-frontend-ecru.vercel.app',
       ],
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
       credentials: true,
